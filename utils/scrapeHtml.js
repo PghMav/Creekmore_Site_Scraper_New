@@ -5,6 +5,8 @@ const fs = require('fs')
 const path = require('path')
 const _ = require('lodash')
 const theUrl = require('url')
+const addCssLinks = require('./addCssLinks.js')
+const pathnameLong = require('./pathnameLong.js')
 
 
 
@@ -39,7 +41,7 @@ const scrapeHtml =  (urlArray, dir, blog) =>{
        '/hunter-douglas-videos',
        '/decorating-with-green-home-accents',
        '/decorating-with-bookshelves',
-       'https://www.allaboutblindsetc.com/upgrade-your-home-office',
+       '/upgrade-your-home-office',
        '/fresh-design-ideas-for-your-home',
        '/window-treatments-for-bathrooms',
        '/window-treatments-for-bedrooms',
@@ -60,8 +62,11 @@ const scrapeHtml =  (urlArray, dir, blog) =>{
        '/child-and-pet-safe-window-treatments',
        '/energy-efficient-window-coverings',
        '/light-filtering-window-treatments-and-uv-protection'
-
      ]
+
+     if(urlFilter.includes(pathname)){
+       return
+     }
 
      const pathnameLength = pathname.length<2
 
@@ -75,26 +80,30 @@ const scrapeHtml =  (urlArray, dir, blog) =>{
     })
     .then(html => {
 
-      fs.writeFileSync(htmlPath, html)
-      return html
+      let linkTags
+
+      const testForString = pathnameLong(url)
+      console.log(chalk.bgRed.cyanBright(url))
+      console.log(chalk.bgRed.cyanBright(testForString))
+      if( testForString || blog){
+        linkTags = `<link rel="stylesheet" href="..css/creekmore.css"/><link rel="stylesheet" href="../css/hunter-douglas.css"/>`
+
+      } else {
+
+        linkTags = `<link rel="stylesheet" href="css/creekmore.css"/><link rel="stylesheet" href="css/hunter-douglas.css"/>`
+      }
+
+      const newHtml = addCssLinks(html, linkTags)
+      return newHtml
+
+
     })
     .then(html=>{
-
-      //STAGE: CSS SCRAPE AND FILE
-      //Scrape for the link tag using cheerio; save as variable
-      // check this url to see if it is the home page via pathnameLength
-      //IF YES: run the tag link through getCss(), then change the link
-      //using changeCssPath()
-      //IF NO: just change the css link using changeCssPath
-
-      return html
-       // getCss(html)
-       // changeCSsPath()
-
+      fs.writeFileSync(htmlPath, html)
     })
     .catch(e=>{
 
-     console.log(chalk.bold.red(`There was a problem scraping ${chalk.underline(url)}. Thought you'd want to know.`))
+     console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
    })
 
    resourceCount++
@@ -115,12 +124,13 @@ process.on('exit', ()=>{
 }
 
 
-const directory = 'www.mrksquincy.com'
+// const directory = 'www.mrksquincy.com'
+//
+// basicUrls = [
+//   'https://www.mrksquincy.com',
+//   'https://www.mrksquincy.com/about',
+//   'https://www.mrksquincy.com/blog',
+//   'https://www.mrksquincy.com/energy-efficient-window-coverings',
+//   'https://www.mrksquincy.com/hunter-douglas/shutters']
 
-basicUrls = [
-  'https://www.mrksquincy.com',
-  'https://www.mrksquincy.com/about',
-  'https://www.mrksquincy.com/blog']
-scrapeHtml(basicUrls, directory)
-
-// module.exports = scrapeHtml
+module.exports = scrapeHtml

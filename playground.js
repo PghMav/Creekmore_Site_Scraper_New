@@ -1,50 +1,69 @@
 const makeBlogPostsArray = require('./blogs/makeBlogPostsArray.js')
-const scrapeHtml = require('./utils/scrapeHtml.js')
 const getAllUrlsFromXml = require('./utils/getAllUrlsFromXml.js')
 const chalk = require('chalk')
 const rp = require('request-promise')
+const cheerio = require('cheerio');
+const path = require('path')
+const theUrl = require('url')
+const fs = require('fs')
+const addCssLinks = require('./utils/addCssLinks.js')
+
+const linkAdder=(url, dir, blog)=>{
 
 
-const baseUrl = 'https://www.mrksquincy.com'
-let baseArray = ['https://www.mrksquincy.com/wer', 'https://www.mrksquincy.com/xnkero', 'https://www.mrksquincy.com/pe93']
-const archivePages = [
-  '/blog',
-  '/blog-2019',
-  '/blog-2018',
-  '/blog-2017',
-  '/blog-2016',
-  '/blog-2015'
-]
+   const {
+    protocol,
+    slashes,
+    host,
+    query,
+    href,
+    pathname
+  } = theUrl.parse(url);
 
-const sitemap = baseUrl + '/sitemap.xml'
+  const ifBlog = blog ? `/blog`:``
 
-const scrapeSitemap = rp(sitemap)
-.then(  html=>{
+  const pathnameLength = pathname.length<2
 
-    return getAllUrlsFromXml(html)
+const htmlPath = path.join(__dirname, `/files/${dir}/${ifBlog}${!pathnameLength ?  pathname : host}.html`)
 
-  })
-    .then( result=>{
-      //console.log(result)
-      return result
-    })
-.catch(e=> console.log(e))
+rp({
+uri: url
+})
+.then(html => {
+  let linkTags
+  if(pathname.lenght<14){
+    linkTags = `<link rel="stylesheet" href="/css/creekmore.css"><link rel="stylesheet" href="/css/hunter-douglas.css">`
+  } else {
 
-const getAllUrls = async ()=>{
-  const htmlUrls = await scrapeXML
-  const blogsUrls = await makeBlogPostsArray(baseUrl)
-
-  console.log(chalk.yellow(htmlUrls))
-  console.log(chalk.bgGreen(blogsUrls))
-
-  return {
-    blogs:blogsUrls,
-    site: htmlUrls
+    linkTags = `<link rel="stylesheet" href="../css/creekmore.css"><link rel="stylesheet" href="../css/hunter-douglas.css">`
   }
-  // const fullArray = htmlUrls.concat(blogsUrls)
-  // console.log(chalk.magenta(fullArray))
-}
 
-getAllUrls().then(result=>console.log(result))
+
+
+  const newHtml = addCssLinks(html, linkTags)
+  //console.log(newHtml)
+  //console.log(typeof html)
+  //const $ = cheerio.load(html)
+  //const addCSSLink = $('head').append('<link rel="stylesheet" href="/creekmore.css" >')
+  // const addLinkAttr = addCSSLink.attr('href', '/css/creekmore.css').attr('rel', 'stylesheet')
+  //should we insert the <link> tags here? yes i think so
+  //console.log(addCSSLink)
+
+
+  fs.writeFileSync(htmlPath, newHtml)
+  //return html
+})
+.catch(e=>{
+
+ console.log(chalk.bold.red(`There was a problem scraping ${chalk.underline(url)}. Thought you'd want to know. ${e}`))
+})
+}
+// getAllUrls().then(result=>console.log(result))
 //console.log(baseArray)
 //Promise.all(baseArray).then(result=> console.log(result))
+const radUrl = 'https://www.mrksquincy.com/'
+const radLongUrl = 'https://www.mrksquincy.com/hunter-douglas/roman-shades'
+const radDir = 'www.mrks'
+
+linkAdder(radUrl, radDir)
+linkAdder(radLongUrl, radDir)
