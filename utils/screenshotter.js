@@ -5,10 +5,12 @@ const path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
 const _ = require('lodash')
+const Promise = require('promise');
+const Stopwatch = require('statman-stopwatch');
+const stopwatch = new Stopwatch();
 
-
-const screenShotter = (urlArray, host, blog) => {
-
+const screenShotter = (urlArray) => {
+    stopwatch.start();
     let resourceCount = 0;
     console.log(`screen shotter is working...`);
 
@@ -21,7 +23,7 @@ const screenShotter = (urlArray, host, blog) => {
     });
 
     function run(url) {
-        return new Promise((resolveURL, rejectURL) => {
+        return new Promise=((resolveURL, rejectURL) => {
             const {
                 protocol,
                 slashes,
@@ -34,9 +36,7 @@ const screenShotter = (urlArray, host, blog) => {
             //const urlPosition = urlArray.indexOf(url);
             const pathnameLength = pathname.length < 2;
 
-            const ifBlog = blog ? `/blog`:``
-
-            const imageBox = path.join(__dirname, `../files/${host}/${ifBlog}${!pathnameLength ?  pathname : host}.png`);
+            const imageBox = path.join(__dirname, `../imgs/${!pathnameLength ? pathname : host}.png`);
 
             //console.log(imageBox);
             console.log(`Processing ${url}`);
@@ -59,7 +59,6 @@ const screenShotter = (urlArray, host, blog) => {
                 })
                 .then(dimensions => {
                     nightmare.viewport(dimensions.width, dimensions.height)
-                  })
                         .screenshot()
                         .then( buffer => {
                             writeFile(imageBox, buffer).finally(data => {
@@ -79,76 +78,38 @@ const screenShotter = (urlArray, host, blog) => {
 
 
 
+            //console.dir(dimensions);
         });
-
+    }
 
     let promiseArray = [];
-    urlArray.forEach( url =>
-    //BEGIN ADD URL FILTER
-    // const urlFilter = [
-    //   '/hunter-douglas-window-treatments/duette',
-    //   '/hunter-douglas/sheers-shadings',
-    //   '/hunter-douglas/roman-shades',
-    //   '/hunter-douglas/roller-shades-solar-shades',
-    //   '/hunter-douglas/woven-woods',
-    //   '/hunter-douglas/shutters',
-    //   '/hunter-douglas/vertical-blinds',
-    //   '/hunter-douglas/wood-metal-blinds',
-    //   '/hunter-douglas-window-treatments/design-studio-side-panels-drapery',
-    //   '/hunter-douglas-powerview-motorization',
-    //   '/new-hunter-douglas-window-treatments-and-options',
-    //   '/hunter-douglas-videos',
-    //   '/decorating-with-green-home-accents',
-    //   '/decorating-with-bookshelves',
-    //   '/upgrade-your-home-office',
-    //   '/fresh-design-ideas-for-your-home',
-    //   '/window-treatments-for-bathrooms',
-    //   '/window-treatments-for-bedrooms',
-    //   '/window-treatments-for-home-offices',
-    //   '/window-treatments-for-kitchens',
-    //   '/window-treatments-for-living-rooms',
-    //   '/window-treatments-for-media-rooms',
-    //   '/window-treatments-for-nursery-and-childrens-rooms',
-    //   '/window-treatments-for-angled-windows',
-    //   '/window-treatments-for-arched-windows',
-    //   '/window-treatments-for-bay-and-corner-windows',
-    //   '/window-treatments-for-french-doors',
-    //   '/sidelight-window-blinds-and-shades',
-    //   '/window-treatments-for-skylights',
-    //   '/window-treatments-for-patio-doors-and-sliding-glass-doors',
-    //   '/motorized-blinds-shades-and-honeycombs',
-    //   '/room-darkening-and-blackout-window-treatments',
-    //   '/child-and-pet-safe-window-treatments',
-    //   '/energy-efficient-window-coverings',
-    //   '/light-filtering-window-treatments-and-uv-protection'
-    // ]
-    //
-    // if(urlFilter.includes(pathname)){
-    //   return
-    // }
-    //END URL FILTER
-
-
-
-
-   promiseArray.push(run(url)) );
+    urlArray.forEach( url => promiseArray.push(run(url)) );
     Promise.all(promiseArray).then(values => {
         values.forEach( msg => console.log(msg) );
     });
 
+    async function asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    }
 
+    /*asyncForEach(urlArray, async (url, urlIndex, arrayFull) => {
+        await vo(run)(url)
+            .then(
+                resourceCount = resourceCount + 1
+            ).catch(e => {
+                return e;
+            });
+    });*/
 
     process.on('exit', () => {
-
-
+        console.log(chalk.bgBlue.bold.white('All Done!!'));
+        const stopIt = stopwatch.stop() / 1000;
         console.log(chalk.bold.yellow(
             `
           **************************
-
-
           Total: ${resourceCount} pages in ${stopIt} seconds
-
-
           **************************`));
     });
 

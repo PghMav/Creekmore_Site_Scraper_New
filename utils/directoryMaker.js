@@ -7,7 +7,9 @@ const copyFile = require('fs-copy-file')
 
 const directoryMaker = (directory)=>{
   const mainDirPath = path.join(__dirname, `../files/${directory}`)
-  console.log(chalk.bgCyan.yellowBright(`Main directory: ${mainDirPath}`))
+
+  console.log(chalk.bgCyan.yellowBright(`Directory Maker: ${mainDirPath}`))
+
   if(fs.existsSync(mainDirPath)){
     console.log(`Directory for ${mainDirPath} already exists`)
     process.exit(0)
@@ -49,6 +51,6 @@ const directoryMaker = (directory)=>{
 
 }
 
-// directoryMaker('test')
+// directoryMaker('Creekmore_Test')
 
 module.exports = directoryMaker

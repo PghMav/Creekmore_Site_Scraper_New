@@ -14,7 +14,7 @@ const pathnameLong = (pathname) => {
       return false
 
     } else {
-      console.log(chalk.green(true))
+      
       return true
     }
 

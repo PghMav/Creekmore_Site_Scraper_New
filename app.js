@@ -8,7 +8,8 @@ const getAllUrlsFromXml = require('./utils/getAllUrlsFromXml.js')
 const directoryMaker = require('./utils/directoryMaker.js')
 const makeBlogPostsArray = require('./blogs/makeBlogPostsArray.js')
 const scrapeHtml = require('./utils/scrapeHtml.js')
-const screenShotter = require('./utils/screenshotter.js')
+const getScreenshots = require('./utils/getScreenshots.js')
+//const screenShotter = require('./utils/screenshotter.js')
 const Stopwatch = require('statman-stopwatch');
 
 const stopwatch = new Stopwatch();
@@ -67,18 +68,18 @@ getAllUrls()
         scrapeHtml(result.blogs, host, true)
         return
         case 'SCREENSHOT':
-        screenShotter(result.pages)
-        screenShotter(result.blogs)
+        getScreenshots(result.pages, host)
+        getScreenshots(result.blogs, host, true)
         return
-        case 'BOTH':
+        case 'PAGES-BLOGS':
         scrapeHtml(result.pages, host)
         scrapeHtml(result.blogs, host, true)
         return
         case 'ALL':
         scrapeHtml(result.pages, host)
         scrapeHtml(result.blogs, host, true)
-        screenShotter(result.blogs)
-        screenShotter(result.pages)
+        getScreenshots(result.pages, host)
+        getScreenshots(result.blogs, host, true)
         return
         default:
         throw new Error(`Enter valid type`)
@@ -95,7 +96,7 @@ process.on('exit', ()=>{
   const stopIt = stopwatch.stop()/1000
   console.log(chalk.bgYellow(
     `
-    *****************************************************************
+    *****************************************************************()
     Total Time for ${host}: ${stopIt} seconds
     *****************************************************************`))
 

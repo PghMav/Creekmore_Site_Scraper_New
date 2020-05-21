@@ -12,6 +12,7 @@
     "fs-copy-file": "^2.1.2",
     "lodash": "^4.17.15",
     "nightmare": "^3.0.2",
+    "puppeteer": "^3.1.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "statman-stopwatch": "^2.11.1",
@@ -30,8 +31,10 @@
     "html": "node utils/scrapeHtml.js",
     "screenshotter": "node utils/screenshotter.js",
     "blog": "node app.js --url=https://www.mrksquincy.com --type=BLOG",
-    "both": "node app.js --url=https://www.mrksquincy.com --type=BOTH",
-    "basic": "node app.js --url=https://www.mrksquincy.com --type=HTML"
+    "pages-blogs": "node app.js --url=https://www.mrksquincy.com --type=PAGES-BLOGS",
+    "basic": "node app.js --url=https://www.mrksquincy.com --type=HTML",
+    "pics": "node app.js --url=https://www.mrksquincy.com --type=SCREENSHOT",
+    "kahuna": "node app.js --url=https://www.mrksquincy.com --type=ALL"
   },
   "keywords": [],
   "author": "Bret Mavrich",
