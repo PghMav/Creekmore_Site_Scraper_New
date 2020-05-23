@@ -11,17 +11,17 @@ const filterUrls = require('./filterUrls.js')
 const ProgressBar = require('progress')
 
 
-const scrapeHtml =  (urlArray, dir, blog) =>{
+const scrapeHtml =  (urlArray, dir, blog, appProgressBar) =>{
 
 
     // const filterArray = filterUrls(urlArray)
     let resourceCount = 0
 
-    var scrapeProgress = new ProgressBar(`Scraping ${blog? 'blogs': 'pages'} [:bar] :current/:total :percent :etas`, {
-      total: urlArray.length,
-      width: 20,
-
-    });
+    // var scrapeProgress = new ProgressBar(`Scraping ${blog? 'blogs': 'pages'} [:bar] :current/:total :percent :etas`, {
+    //   total: urlArray.length,
+    //   width: 20,
+    //
+    // });
 
      urlArray.forEach( url=>{
 
@@ -68,13 +68,17 @@ const scrapeHtml =  (urlArray, dir, blog) =>{
     .then(html=>{
       fs.writeFileSync(htmlPath, html)
 
-      scrapeProgress.tick();
-      if (scrapeProgress.complete) {
-        console.log(chalk.bgRed.yellowBright(`Scrape complete!`));
+      appProgressBar.tick()
+      if(appProgressBar.complete){
+        console.log( `it worked!!`)
       }
+      // scrapeProgress.tick();
+      // if (scrapeProgress.complete) {
+      //   console.log(chalk.bgRed.yellowBright(`Scrape complete!`));
+      // }
     })
     .catch(e=>{
-     scrapeProgress.interrupt(`Issue SCRAPE ${url}: ${e}`)
+     appProgressBar.interrupt(`Issue SCRAPE ${url}: ${e}`)
      //console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
    })
 

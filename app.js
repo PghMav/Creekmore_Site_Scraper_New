@@ -11,10 +11,12 @@ const scrapeHtml = require('./utils/scrapeHtml.js')
 const getScreenshots = require('./utils/getScreenshots.js')
 const filterUrls = require('./utils/filterUrls.js')
 //const screenShotter = require('./utils/screenshotter.js')
-const Stopwatch = require('statman-stopwatch');
+// const Stopwatch = require('statman-stopwatch');
 
-const stopwatch = new Stopwatch();
-stopwatch.start()
+const ProgressBar = require('progress')
+
+// const stopwatch = new Stopwatch();
+// stopwatch.start()
 
 // parse arguements
 const theArgs = yargs.parse()
@@ -47,6 +49,8 @@ if(theArgs.type === 'SINGLE'){
   return
 }
 
+
+
 // crawl sitemap
 const sitemap = baseUrl + '/sitemap.xml'
 
@@ -73,6 +77,8 @@ const getAllUrls = async ()=>{
     }
 }
 directoryMaker(host)
+
+
 //run app
 getAllUrls()
     .then(result=>{
@@ -112,10 +118,15 @@ getAllUrls()
     // })
     .then(result=>{
 
+      const appProgress = new ProgressBar(chalk.bgGreen.red(`scraping [:bar] :current/:total :percent`), {
+        total: result.blogs.length + result.pages.length,
+        width: 20
+      })
+
       switch(theArgs.type){
         case 'PAGES':
-        scrapeHtml(result.pages, host)
-        getScreenshots(result.pages, host)
+        scrapeHtml(result.pages, host, false, appProgress)
+        scrapeHtml(result.blogs, host, true, appProgress)
         return
         case 'BLOG':
         scrapeHtml(result.blogs, host, true)
@@ -128,7 +139,7 @@ getAllUrls()
         case 'PAGES-BLOGS':
         getScreenshots(result.pages, host)
         getScreenshots(result.blogs, host, true)
-      
+
         return
         case 'ALL':
         scrapeHtml(result.pages, host)
@@ -148,11 +159,11 @@ getAllUrls()
 
 process.on('exit', ()=>{
 
-  const stopIt = stopwatch.stop()/1000
+  // const stopIt = stopwatch.stop()/1000
   console.log(chalk.bgYellow(
     `
     *****************************************************************()
-    Total Time for ${host}: ${stopIt} seconds
+    Total Time for ${host}:  seconds
     *****************************************************************`))
 
   });
