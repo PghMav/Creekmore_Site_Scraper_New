@@ -15,7 +15,9 @@ const makeBlogPostsArray = async (host)=>{
 
   for (const archivePage of blogArchivePages){
 
+    console.log(chalk.yellow(`Checking ${archivePage} for posts ...`))
     const postUrls = await getAllBlogPostUrls(archivePage)
+
     if(postUrls !== undefined){
 
     const newArray = archiveArray.concat(postUrls)

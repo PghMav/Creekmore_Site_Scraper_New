@@ -9,6 +9,7 @@ const directoryMaker = require('./utils/directoryMaker.js')
 const makeBlogPostsArray = require('./blogs/makeBlogPostsArray.js')
 const scrapeHtml = require('./utils/scrapeHtml.js')
 const getScreenshots = require('./utils/getScreenshots.js')
+const filterUrls = require('./utils/filterUrls.js')
 //const screenShotter = require('./utils/screenshotter.js')
 const Stopwatch = require('statman-stopwatch');
 
@@ -19,13 +20,31 @@ stopwatch.start()
 const theArgs = yargs.parse()
 const baseUrl = theArgs.url
 const theType = theArgs.type
+// const argsHtml = theArgs.html
+// const argsSS = theArgs.screenshot
+//
+// const ifHtml = (argsHtml === "true"? true : false)
+// const ifScreenshot = (argsSS === "true"? true : false)
+//
+// console.log(`html: ${ifHtml}`)
+// console.log(`screenshot ${ifScreenshot}`)
 
 const {host} = theUrl.parse(baseUrl)
-console.log(chalk.cyanBright.bgYellow(host))
+console.log(chalk.yellow(`Getting started with:`))
+console.log(chalk.bgYellow.cyan(host))
 
 if(!baseUrl || !theType){
   console.log(chalk.bgGreen(`Please supply a valid homepage for the first argument, and a valid scrape type.`))
   process.exit(0)
+}
+
+
+if(theArgs.type === 'SINGLE'){
+  const {host} = theUrl.parse(baseUrl)
+  directoryMaker(host)
+  scrapeHtml([baseUrl], host)
+  getScreenshots([baseUrl], host)
+  return
 }
 
 // crawl sitemap
@@ -53,27 +72,63 @@ const getAllUrls = async ()=>{
       pages: htmlUrls
     }
 }
-
+directoryMaker(host)
 //run app
 getAllUrls()
     .then(result=>{
-
-      directoryMaker(host)
+      //filter here
+      const filteredArray = filterUrls(result.pages)
+      return {
+        pages: filteredArray,
+        blogs: result.blogs
+      }
+    })
+    // .then(result=>{
+    //
+    //   //scrape HTML here
+    //   if(ifHtml){
+    //   for(const array in result){
+    //      scrapeHtml(result[array])
+    //     return result
+    //   }} else {
+    //     return result
+    //   }
+    //
+    //
+    //
+    // })
+    // .then(result=>{
+    //
+    //   //get screenshots here
+    //   if(ifScreenshot){
+    //   for(const array in result){
+    //      getScreenshots(result[array])
+    //     return result
+    //   }
+    // }else{
+    //   return result
+    // }
+    //
+    // })
+    .then(result=>{
 
       switch(theArgs.type){
-        case 'HTML':
+        case 'PAGES':
         scrapeHtml(result.pages, host)
+        getScreenshots(result.pages, host)
         return
         case 'BLOG':
         scrapeHtml(result.blogs, host, true)
+        getScreenshots(result.blogs, host, true)
         return
         case 'SCREENSHOT':
         getScreenshots(result.pages, host)
         getScreenshots(result.blogs, host, true)
         return
         case 'PAGES-BLOGS':
-        scrapeHtml(result.pages, host)
-        scrapeHtml(result.blogs, host, true)
+        getScreenshots(result.pages, host)
+        getScreenshots(result.blogs, host, true)
+      
         return
         case 'ALL':
         scrapeHtml(result.pages, host)

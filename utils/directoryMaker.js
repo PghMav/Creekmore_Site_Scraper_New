@@ -5,6 +5,7 @@ const copyFile = require('fs-copy-file')
 
 
 
+
 const directoryMaker = (directory)=>{
   const mainDirPath = path.join(__dirname, `../files/${directory}`)
 
@@ -15,11 +16,13 @@ const directoryMaker = (directory)=>{
     process.exit(0)
   }
   fs.mkdirSync(mainDirPath)
-  const directoryBlog = path.join(mainDirPath, '/blog'),
-        directoryHDWT = path.join(mainDirPath, '/hunter-douglas-window-treatments'),
-        directoryHD = path.join(mainDirPath, '/hunter-douglas'),
-        directoryABOUT = path.join(mainDirPath, '/about_us'),
-        directoryCSS = path.join(mainDirPath, '/css'),
+
+  const directoryHtml = path.join(mainDirPath, '/html'),
+        directoryBlog = path.join(directoryHtml, '/blog'),
+        directoryHDWT = path.join(directoryHtml, '/hunter-douglas-window-treatments'),
+        directoryHD = path.join(directoryHtml, '/hunter-douglas'),
+        directoryABOUT = path.join(directoryHtml, '/about_us'),
+        directoryCSS = path.join(directoryHtml, '/css'),
         pathCSS = path.join(__dirname, `../css`),
         pathScreenShots = path.join(mainDirPath, '/screenshots'),
         pathScreenShotsHDWT = path.join(pathScreenShots, '/hunter-douglas-window-treatments'),
@@ -27,6 +30,7 @@ const directoryMaker = (directory)=>{
         pathScreenShotABOUT = path.join(pathScreenShots, '/about-us'),
         pathScreenShotBLOG = path.join(pathScreenShots, '/blog')
 
+  fs.mkdirSync(directoryHtml)
   fs.mkdirSync(directoryBlog)
   fs.mkdirSync(directoryHDWT)
   fs.mkdirSync(directoryHD)
@@ -51,6 +55,6 @@ const directoryMaker = (directory)=>{
 
 }
 
-// directoryMaker('Creekmore_Test')
+// directoryMaker('www.mrksquincy.com')
 
 module.exports = directoryMaker

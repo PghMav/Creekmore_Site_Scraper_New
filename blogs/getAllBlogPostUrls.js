@@ -24,25 +24,33 @@ const getAllBlogPostUrls =async archivePage=>{
     .then(html =>{
 
       const $ = cheerio.load(html)
-      const allATags = $('div.button-container > a.cta')
+      const allATags = $('div.button-container > a[class="cta button small"]')
+      //const allATags = $('a.cta')
 
       const tagKeys = Object.keys(allATags)
 
-      tagKeys.forEach(key=>{
+      for(const key of tagKeys){
+      if(+key){
 
-
-        if(+key){
         const thePath = allATags[key].attribs.href
-        newUrls.push(`${protocol}//${host}${thePath}`)
+
+
+        if(!newUrls.includes(`${protocol}//${host}${thePath}`)){
+            newUrls.push(`${protocol}//${host}${thePath}`)
         }
 
-        })//end forEach
+      }
 
+
+          }
 
 
     })
     .catch(e=>{
-      console.log(chalk.bgBlue(newUrls))
+      if(e.statusCode === 404){
+        console.log(`404 Error on ${archivePage}`)
+      }
+      
 
     })
  return newUrls

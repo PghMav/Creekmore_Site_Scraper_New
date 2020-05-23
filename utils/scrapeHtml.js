@@ -8,15 +8,22 @@ const theUrl = require('url')
 const addCssLinks = require('./addCssLinks.js')
 const pathnameLong = require('./pathnameLong.js')
 const filterUrls = require('./filterUrls.js')
-
+const ProgressBar = require('progress')
 
 
 const scrapeHtml =  (urlArray, dir, blog) =>{
-    console.log(chalk.bgCyan.yellowBright(`SCRAPING: ${blog? "Blogs": "Pages"}`))
-    const filterArray = filterUrls(urlArray)
+
+
+    // const filterArray = filterUrls(urlArray)
     let resourceCount = 0
 
-     filterArray.forEach( url=>{
+    var scrapeProgress = new ProgressBar(`Scraping ${blog? 'blogs': 'pages'} [:bar] :current/:total :percent :etas`, {
+      total: urlArray.length,
+      width: 20,
+
+    });
+
+     urlArray.forEach( url=>{
 
       const {
        protocol,
@@ -33,7 +40,7 @@ const scrapeHtml =  (urlArray, dir, blog) =>{
 
      const ifBlog = blog ? `/blog`:``
 
-     const htmlPath = path.join(__dirname, `../files/${dir}/${ifBlog}${!pathnameLength ?  pathname : host}.html`)
+     const htmlPath = path.join(__dirname, `../files/${dir}/html/${ifBlog}${!pathnameLength ?  pathname : host}.html`)
 
 
     rp({
@@ -60,10 +67,15 @@ const scrapeHtml =  (urlArray, dir, blog) =>{
     })
     .then(html=>{
       fs.writeFileSync(htmlPath, html)
+
+      scrapeProgress.tick();
+      if (scrapeProgress.complete) {
+        console.log(chalk.bgRed.yellowBright(`Scrape complete!`));
+      }
     })
     .catch(e=>{
-
-     console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
+     scrapeProgress.interrupt(`Issue SCRAPE ${url}: ${e}`)
+     //console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
    })
 
    resourceCount++
@@ -92,5 +104,7 @@ process.on('exit', ()=>{
 //   'https://www.mrksquincy.com/blog',
 //   'https://www.mrksquincy.com/energy-efficient-window-coverings',
 //   'https://www.mrksquincy.com/hunter-douglas/shutters']
+//
+// scrapeHtml(basicUrls, directory)
 
 module.exports = scrapeHtml

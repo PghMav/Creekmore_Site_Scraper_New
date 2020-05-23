@@ -4,16 +4,36 @@ const path = require('path')
 const chalk = require('chalk')
 const theUrl = require('url')
 const filterUrls = require('./filterUrls.js')
+const ProgressBar = require('progress')
 
 
 const getScreenshots = async (urlArray, dir, blog) => {
   let resourceCount = 0
-  console.log(chalk.bgCyan.yellowBright(`SCREENSHOT: ${blog? "Blogs": "Pages"}`))
-  const filterArray = filterUrls(urlArray)
 
-  const browser = await puppeteer.launch()
+  if(blog){
+    var snapBlogProgress = new ProgressBar(chalk.bgCyan.whiteBright(`Screenshots ${blog? 'blogs':'pages'} [:bar] :current/:total :percent :etas`), {
+      total: urlArray.length,
+      width: 20,
+      complete: blog? '#': '=',
+      incomplete: '-'
+    });
+  } else {
+    var snapPagesProgress = new ProgressBar(chalk.bgMagenta.whiteBright(`Screenshots ${blog? 'blogs':'pages'} [:bar] :current/:total :percent :etas`), {
+      total: urlArray.length,
+      width: 20,
+      complete: blog? '#': '=',
+      incomplete: '-'
+    });
+  }
 
-  for(const url of filterArray){
+
+
+
+  //console.log(chalk.bgCyan.yellowBright(`SCREENSHOT: ${blog? "Blogs": "Pages"}`))
+
+  const browser = await puppeteer.launch( )
+
+  for(const url of urlArray){
 
     const {
      protocol,
@@ -62,13 +82,35 @@ const getScreenshots = async (urlArray, dir, blog) => {
         fullPage: true
       })
 
-      resourceCount++
-      console.log(chalk.bgCyan.redBright(`Another screenshot! ${resourceCount} and counting!`))
+
+
       await page.close()
 
-    } catch (e){
+      if (blog) {
+      snapBlogProgress.tick();
+      if(snapBlogProgress.complete){
+        console.log(chalk.bgCyan.yellowBright(`Blogs screenshots complete!`));
+      }
 
-      console.log(chalk.cyan(e))
+      } else {
+      snapPagesProgress.tick()
+      if (snapPagesProgress.complete) {
+        console.log(chalk.bgCyan.yellowBright(`Pages screenshots complete!`));
+      }
+      }
+
+
+
+
+      resourceCount++
+
+    } catch (e){
+      if(blog){
+        snapBlogProgress.interrupt(`Issue SCREENSHOT ${url}: ${e}`)
+      } else {
+        snapPagesProgress.interrupt(`Issue SCREENSHOT ${url}: ${e}`)
+      }
+    //  console.log(chalk.cyan(e))
 
     }
 
@@ -96,6 +138,6 @@ const getScreenshots = async (urlArray, dir, blog) => {
 //   'https://www.mrksquincy.com/about',
 //   'https://www.mrksquincy.com/blog'
 // ]
-// puppet(basicUrls)
+// getScreenshots(basicUrls, 'www.mrksquincy.com')
 
 module.exports = getScreenshots
