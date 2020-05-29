@@ -6,6 +6,7 @@ The app iterates over pages in a sitemap and either
 - or both
 
 The newly created .html files are added to the "files" folder, and images are added to the "imgs" folder.
+All errors are logged to an error file in the "logs" folder.
 
 Run the file apps.js from the command line with two flags:
 
