@@ -1,12 +1,10 @@
-const makeBlogPostsArray = require('./blogs/makeBlogPostsArray.js')
-const getAllUrlsFromXml = require('./utils/getAllUrlsFromXml.js')
+
 const chalk = require('chalk')
-const rp = require('request-promise')
-const cheerio = require('cheerio');
+
 const path = require('path')
 const theUrl = require('url')
 const fs = require('fs')
-const addCssLinks = require('./utils/addCssLinks.js')
+
 const readline = require('readline')
 
 
@@ -20,22 +18,40 @@ const readline = require('readline')
 // return
 // }
 
-const theFunction = () =>{
-  const simpleInterface = readline.createInterface(process.stdin, process.stdout)
-  const onUserAnswer = (answer) =>{
-    simpleInterface.close()
-    process.stdin.destroy()
-    if (answer === 'N') {
-       console.log(`You said no.`)
-       
-    } else {
-      return console.log(`You said...something else.`)
-       process.exit()
+const theFunction = (array) =>{
 
+
+  for(const url of array){
+    const {
+     protocol,
+     slashes,
+     host,
+     query,
+     href,
+     pathname
+   } = theUrl.parse(url);
+
+   const hdRegEx = /\/hunter-douglas-window-treatments\//
+   const hdRegEx2 = /\/hunter-douglas\//
+
+   const test1 = hdRegEx.test(pathname)
+   const test2 = hdRegEx2.test(pathname)
+
+    if(test1 || test2 ){
+      console.log(chalk.red(`Failed test: ${url}`))
+    } else {
+      console.log(chalk.bgGreen(`Passed test: ${url}`))
     }
   }
-   simpleInterface.question('Do you want to override an existing file (if created with another scrape)? Y/N', onUserAnswer)
-
 }
 
-theFunction()
+const testArray = [
+  'https://www.hdalliance.com',
+  'https://www.hdalliance.com/hunter-douglas-window-treatments/cadence',
+  'https://www.hdalliance.com/hunter-douglas-window-treatments/everwood',
+  'https://www.hdalliance.com/hunter-douglas/side-panels-drapery',
+  'https://www.hdalliance.com/blog',
+  'https://www.hdalliance.com/about'
+]
+
+theFunction(testArray)

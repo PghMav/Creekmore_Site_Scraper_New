@@ -50,13 +50,16 @@ const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) =>
     const ifBlog = blog ? `/blog`:``
     const ifOverwrite = overwrite ? `-SINGLE`:``
 
+    const hdRegEx = /\/hunter-douglas-window-treatments\//
+    const hdRegEx2 = /\/hunter-douglas\//
+
+    const test1 = hdRegEx.test(pathname)
+    const test2 = hdRegEx2.test(pathname)
+
     const writePath = path.join(__dirname, `../files/${dir}/screenshots/${ifBlog}${!pathnameLength ?  pathname : host}${ifOverwrite}.png`)
 
 
-    const viewportOptions = {
-      width: 1024,
-      height: 768
-    }
+
 
     try{
 
@@ -65,8 +68,11 @@ const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) =>
       await page.viewport({
         width: 1024,
         height: 768
-      })
+            })
       await page.goto(url)
+      if(test1 || test2){
+        await page.waitForSelector(`#pageMain_ContentSection_Section_20 > div.product-details-container.overview.ng-scope > div > div > div > div`)
+      }
       await page.screenshot({
         path: writePath,
         fullPage: true
