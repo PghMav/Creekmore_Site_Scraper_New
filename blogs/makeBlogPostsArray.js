@@ -3,6 +3,8 @@ const chalk = require('chalk')
 
 const makeBlogPostsArray = async (host)=>{
 
+  console.log(`getting urls from blog archives ...`)
+
   const blogArchivePages = [
     `${host}/blog`,
     `${host}/blog-2019`,

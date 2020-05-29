@@ -35,18 +35,6 @@ const fullSiteUtility =  (baseUrl, theType, host) =>{
 
         }
 
-      //  const htmlUrls = await htmlScrape
-
-        //concatenate xmlUrls and htmlUrls
-      //  const finalUrlList = await combineUrlArrays(xmlUrls, htmlUrls)
-
-
-        // const blogsUrls = await makeBlogPostsArray(baseUrl)
-        //
-        // return {
-        //   blogs:blogsUrls,
-        //   pages: xmlUrls
-        // }
 
    directoryMaker(host)
 
@@ -79,33 +67,37 @@ const fullSiteUtility =  (baseUrl, theType, host) =>{
           }
 
         })
-        .then(result=>{
-          const pagesTotal = result.blogs.length + result.pages.length
-          console.log(chalk.bgYellow.whiteBright(`Total Pages: ${result.pages.length}, Total Blogs:${result.blogs.length}`))
+        .then(({pages, blogs})=>{
+          console.log(chalk.bgCyan.whiteBright.bold(`
+TOTAL PAGES ON SITE:
+${pages.length} being scraped!
+            `))
+          const pagesTotal = blogs.length + pages.length
+          console.log(chalk.bgYellow.whiteBright(`Total Pages: ${pages.length}, Total Blogs:${blogs.length}`))
 
           //appProgressBar counts total pages twice if scraping and screencapturing; this way
           //the progress bar is showing the true total
 
           const appProgress = new ProgressBar(chalk.bgYellow.whiteBright(`Working [:bar] :current/:total :percent :elapsed seconds`), {
-            total: (result.blogs.length + result.pages.length)*(theType === 'HTML-SCREENSHOTS'? 2 : 1),
+            total: (blogs.length + pages.length)*(theType === 'HTML-SCREENSHOTS'? 2 : 1),
             width: 20
           })
 
           switch(theType){
 
             case 'SCREENSHOTS':
-            getScreenshots(result.pages, host, false, false, appProgress)
-            getScreenshots(result.blogs, host, true, false, appProgress)
+            getScreenshots(pages, host, false, false, appProgress)
+            getScreenshots(blogs, host, true, false, appProgress)
             return
             case 'HTML':
-            scrapeHtml(result.pages, host, false, false, appProgress)
-            scrapeHtml(result.blogs, host, true, false, appProgress)
+            scrapeHtml(pages, host, false, false, appProgress)
+            scrapeHtml(blogs, host, true, false, appProgress)
             return
             case 'HTML-SCREENSHOTS':
-            scrapeHtml(result.pages, host, false, false, appProgress)
-            scrapeHtml(result.blogs, host, true, false, appProgress)
-            getScreenshots(result.pages, host, false, false, appProgress)
-            getScreenshots(result.blogs, host, true,false, appProgress)
+            scrapeHtml(pages, host, false, false, appProgress)
+            scrapeHtml(blogs, host, true, false, appProgress)
+            getScreenshots(pages, host, false, false, appProgress)
+            getScreenshots(blogs, host, true,false, appProgress)
             return
             default:
             throw new Error(`Enter valid type`)

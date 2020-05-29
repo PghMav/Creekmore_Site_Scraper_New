@@ -14,7 +14,7 @@ const ProgressBar = require('progress')
 const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
 
     const errorLog = []
-    const errorLogDir = path.join(__dirname, `../files/${dir}/logs/scrape_errors.json`)
+    const errorLogDir = path.join(__dirname, `../files/${dir}/logs/scrape_errors.txt`)
     // const filterArray = filterUrls(urlArray)
     let resourceCount = 0
 
@@ -78,10 +78,26 @@ const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
     .catch(e=>{
      appProgressBar.interrupt(`Issue SCRAPE ${url}: `)
      appProgressBar.tick()
-     errorLog.push({
-       URL: url,
-       ERROR: e
+
+     const errorText = `
+     LOG ERROR FOR: ${url}
+     ERROR: ${e.name}
+     MESSAGE: ${e.message}
+
+
+     ***************************
+
+
+     `
+     fs.appendFileSync(errorLogDir, errorText, (err, file)=>{
+       if (err) throw Error
+       console.log(`Error logged.`)
      })
+
+     // errorLog.push({
+     //   URL: url,
+     //   ERROR: e
+     // })
 
 
 
@@ -94,14 +110,14 @@ const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
 
 
 
-process.on('exit', ()=>{
+// process.on('exit', ()=>{
 //  console.log(errorLog)
-  fs.appendFileSync(errorLogDir, JSON.stringify(errorLog), (err, file)=>{
-    if (err) throw Error
-    console.log(`Error logged.`)
-  })
-
-  });
+//   fs.appendFileSync(errorLogDir, JSON.stringify(errorLog), (err, file)=>{
+//     if (err) throw Error
+//     console.log(`Error logged.`)
+//   })
+//
+//   });
 }
 
 

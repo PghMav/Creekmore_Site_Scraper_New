@@ -10,6 +10,7 @@ const scrapeSitemap = async (baseUrl, type) => {
 
       switch(type){
         case 'XML':
+        console.log(`getting urls from xml sitemap ...`)
         return await getAllUrlsFromXml(sitemapXML,
         (data,err)=>{
           if(data){
@@ -20,7 +21,7 @@ const scrapeSitemap = async (baseUrl, type) => {
           }
         })
         case 'HTML':
-        console.log(`html fires ...`)
+        console.log(`getting urls from html sitemap ...`)
         return  getAllUrlsFromHtml(baseUrl, sitemapHTML, (data,err)=>{
           if(data){
             //console.log(`heres some html sample data: ${data[3]}`)

@@ -17,7 +17,7 @@ const theType = theArgs.type
 
 const {host} = theUrl.parse(baseUrl)
 console.log(chalk.yellow(`Getting started with:`))
-console.log(chalk.bgYellow.cyan(host))
+console.log(chalk.bgYellow.whiteBright.bold(host))
 
 
 if(theType === 'SINGLE'){

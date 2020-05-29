@@ -4,7 +4,7 @@ const _ = require('lodash')
 const rp = require('request-promise')
 
 const getAllUrlsFromXml = async (sitemap, callback)=>{
-  console.log(`xml fires...`)
+  
   const urlList = []
 
   await rp(sitemap)

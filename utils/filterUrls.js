@@ -40,7 +40,10 @@ const filterUrls = (urlArray)=>{
     '/room-darkening-and-blackout-window-treatments',
     '/child-and-pet-safe-window-treatments',
     '/energy-efficient-window-coverings',
-    '/light-filtering-window-treatments-and-uv-protection'
+    '/light-filtering-window-treatments-and-uv-protection',
+    '/sitemap',
+    '/terms-of-use',
+    '/privacy-policy'
   ]
 
   for(const url of urlArray){
