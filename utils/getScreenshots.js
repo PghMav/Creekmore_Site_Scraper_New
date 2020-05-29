@@ -8,6 +8,10 @@ const ProgressBar = require('progress')
 
 
 const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) => {
+  const errorLog = []
+  const errorLogDir = path.join(__dirname, '../files/dir/logs/screenshot_errors.txt')
+
+
   let resourceCount = 0
 
   if(blog){
@@ -87,8 +91,12 @@ const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) =>
     } catch (e){
 
         appProgressBar.interrupt(`Issue SCREENSHOT ${url}`)
+        appProgressBar.tick()
 
-
+        errorLog.push({
+          URL: url,
+          ERROR: e
+        })
     }
 
 
@@ -97,24 +105,15 @@ const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) =>
 
 
  await browser.close()
- // process.on('exit', ()=>{
- //
- //   console.log(chalk.bold.magenta(
- //     `
- //     **************************
- //     Total: ${resourceCount} captured via screenshot
- //     **************************`))
- //
- //   });
+ process.on('exit', ()=>{
+   fs.appendFileSync(errorLogDir, errorLog, (err, file)=>{
+     if (err) throw Error
+     console.log(`Error logged.`)
+   })
+   });
 
 }
 
 
-// basicUrls = [
-//   'https://www.mrksquincy.com',
-//   'https://www.mrksquincy.com/about',
-//   'https://www.mrksquincy.com/blog'
-// ]
-// getScreenshots(basicUrls, 'www.mrksquincy.com')
 
 module.exports = getScreenshots

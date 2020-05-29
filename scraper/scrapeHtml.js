@@ -13,7 +13,8 @@ const ProgressBar = require('progress')
 
 const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
 
-
+    const errorLog = []
+    const errorLogDir = path.join(__dirname, `../files/${dir}/logs/scrape_errors.json`)
     // const filterArray = filterUrls(urlArray)
     let resourceCount = 0
 
@@ -77,6 +78,13 @@ const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
     .catch(e=>{
      appProgressBar.interrupt(`Issue SCRAPE ${url}: `)
      appProgressBar.tick()
+     errorLog.push({
+       URL: url,
+       ERROR: e
+     })
+
+
+
      // console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
    })
 
@@ -85,32 +93,17 @@ const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
 })
 
 
+
+process.on('exit', ()=>{
+//  console.log(errorLog)
+  fs.appendFileSync(errorLogDir, JSON.stringify(errorLog), (err, file)=>{
+    if (err) throw Error
+    console.log(`Error logged.`)
+  })
+
+  });
 }
-// process.on('exit', ()=>{
-//
-//   console.log(chalk.bold.cyan(
-//     `
-//     **************************
-//     Total: ${resourceCount} scraped
-//     **************************`))
-//
-//   });
-// }
 
 
-// const directory = 'www.mrksquincy.com'
-//
-// basicUrls = [
-//   'https://www.mrksquincy.com',
-//   'https://www.mrksquincy.com/about',
-//   'https://www.mrksquincy.com/blog',
-//   'https://www.mrksquincy.com/energy-efficient-window-coverings',
-//   'https://www.mrksquincy.com/hunter-douglas/shutters']
-//
-//   singleUrl = [
-//     'https://www.mrksquincy.com/about'
-//    ]
-//
-// scrapeHtml(singleUrl, directory, false, false)
 
 module.exports = scrapeHtml

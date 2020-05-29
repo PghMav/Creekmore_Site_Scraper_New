@@ -86,7 +86,7 @@ const fullSiteUtility =  (baseUrl, theType, host) =>{
           //appProgressBar counts total pages twice if scraping and screencapturing; this way
           //the progress bar is showing the true total
 
-          const appProgress = new ProgressBar(chalk.bgYellow.whiteBright(`Working [:bar] :current/:total :percent`), {
+          const appProgress = new ProgressBar(chalk.bgYellow.whiteBright(`Working [:bar] :current/:total :percent :elapsed seconds`), {
             total: (result.blogs.length + result.pages.length)*(theType === 'HTML-SCREENSHOTS'? 2 : 1),
             width: 20
           })
@@ -120,9 +120,9 @@ const fullSiteUtility =  (baseUrl, theType, host) =>{
 
 }
 
-const baseUrl = `https://www.allaboutblindsetc.com`
-const baseType = 'HTML'
-const baseHost = 'www.allaboutblindsetc.com'
-
-fullSiteUtility(baseUrl, baseType, baseHost)
+// const baseUrl = `https://www.allaboutblindsetc.com`
+// const baseType = 'HTML'
+// const baseHost = 'www.allaboutblindsetc.com'
+//
+// fullSiteUtility(baseUrl, baseType, baseHost)
 module.exports = fullSiteUtility

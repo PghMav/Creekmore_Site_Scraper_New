@@ -32,7 +32,8 @@ ${mainDirPath}
         pathScreenShotsHDWT = path.join(pathScreenShots, '/hunter-douglas-window-treatments'),
         pathScreenShotsHD = path.join(pathScreenShots, '/hunter-douglas'),
         pathScreenShotABOUT = path.join(pathScreenShots, '/about-us'),
-        pathScreenShotBLOG = path.join(pathScreenShots, '/blog')
+        pathScreenShotBLOG = path.join(pathScreenShots, '/blog'),
+        directoryLogs = path.join(mainDirPath, '/logs')
 
   fs.mkdirSync(directoryHtml)
   fs.mkdirSync(directoryBlog)
@@ -45,6 +46,7 @@ ${mainDirPath}
   fs.mkdirSync(pathScreenShotsHD)
   fs.mkdirSync(pathScreenShotABOUT)
   fs.mkdirSync(pathScreenShotBLOG)
+  fs.mkdirSync(directoryLogs)
 
   copyFile(`${pathCSS}/creekmore.css`, `${directoryCSS}/creekmore.css`, (err)=>{
     if(err){

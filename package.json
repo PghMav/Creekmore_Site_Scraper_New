@@ -29,7 +29,7 @@
   "scripts": {
     "test": "jest",
     "screenshots": "node app.js --url=https://www.allaboutblindsetc.com --type=SCREENSHOTS",
-    "html": "node app.js --url=https://www.allaboutblindsetc.com --type=HTML",
+    "html": "node app.js --url=https://www.mrksquincy.com --type=HTML",
     "all": "node app.js --url=https://www.mrksquincy.com --type=HTML-SCREENSHOTS",
     "single": "node app.js --url=https://www.mrksquincy.com/about --type=SINGLE"
   },
