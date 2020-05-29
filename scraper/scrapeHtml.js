@@ -5,13 +5,13 @@ const fs = require('fs')
 const path = require('path')
 const _ = require('lodash')
 const theUrl = require('url')
-const addCssLinks = require('./addCssLinks.js')
-const pathnameLong = require('./pathnameLong.js')
-const filterUrls = require('./filterUrls.js')
+const addCssLinks = require('../utils/addCssLinks.js')
+const pathnameLong = require('../utils/pathnameLong.js')
+const filterUrls = require('../utils/filterUrls.js')
 const ProgressBar = require('progress')
 
 
-const scrapeHtml =  (urlArray, dir, blog, appProgressBar) =>{
+const scrapeHtml =  (urlArray, dir, blog, overwrite, appProgressBar) =>{
 
 
     // const filterArray = filterUrls(urlArray)
@@ -39,8 +39,9 @@ const scrapeHtml =  (urlArray, dir, blog, appProgressBar) =>{
      const pathnameLength = pathname.length<2
 
      const ifBlog = blog ? `/blog`:``
+     const ifOverwrite = overwrite ? `-SINGLE`:``
 
-     const htmlPath = path.join(__dirname, `../files/${dir}/html/${ifBlog}${!pathnameLength ?  pathname : host}.html`)
+     const htmlPath = path.join(__dirname, `../files/${dir}/html/${ifBlog}${!pathnameLength ?  pathname : host}${ifOverwrite}.html`)
 
 
     rp({
@@ -69,17 +70,14 @@ const scrapeHtml =  (urlArray, dir, blog, appProgressBar) =>{
       fs.writeFileSync(htmlPath, html)
 
       appProgressBar.tick()
-      if(appProgressBar.complete){
-        console.log( `it worked!!`)
+      if (appProgressBar.complete) {
+        console.log(chalk.bgGreen.whiteBright(`Site complete!`));
       }
-      // scrapeProgress.tick();
-      // if (scrapeProgress.complete) {
-      //   console.log(chalk.bgRed.yellowBright(`Scrape complete!`));
-      // }
     })
     .catch(e=>{
-     appProgressBar.interrupt(`Issue SCRAPE ${url}: ${e}`)
-     //console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
+     appProgressBar.interrupt(`Issue SCRAPE ${url}: `)
+     appProgressBar.tick()
+     // console.log(chalk.bold.red(`Problem ${chalk.underline(url)}.`, e))
    })
 
    resourceCount++
@@ -87,17 +85,17 @@ const scrapeHtml =  (urlArray, dir, blog, appProgressBar) =>{
 })
 
 
-
-process.on('exit', ()=>{
-
-  console.log(chalk.bold.cyan(
-    `
-    **************************
-    Total: ${resourceCount} ${blog ? 'blogs':'pages'} processed
-    **************************`))
-
-  });
 }
+// process.on('exit', ()=>{
+//
+//   console.log(chalk.bold.cyan(
+//     `
+//     **************************
+//     Total: ${resourceCount} scraped
+//     **************************`))
+//
+//   });
+// }
 
 
 // const directory = 'www.mrksquincy.com'
@@ -109,6 +107,10 @@ process.on('exit', ()=>{
 //   'https://www.mrksquincy.com/energy-efficient-window-coverings',
 //   'https://www.mrksquincy.com/hunter-douglas/shutters']
 //
-// scrapeHtml(basicUrls, directory)
+//   singleUrl = [
+//     'https://www.mrksquincy.com/about'
+//    ]
+//
+// scrapeHtml(singleUrl, directory, false, false)
 
 module.exports = scrapeHtml

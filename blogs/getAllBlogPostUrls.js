@@ -48,9 +48,9 @@ const getAllBlogPostUrls =async archivePage=>{
     })
     .catch(e=>{
       if(e.statusCode === 404){
-        console.log(`404 Error on ${archivePage}`)
+        console.log(`No posts found on ${archivePage}`)
       }
-      
+
 
     })
  return newUrls

@@ -7,12 +7,16 @@ const copyFile = require('fs-copy-file')
 
 
 const directoryMaker = (directory)=>{
+
   const mainDirPath = path.join(__dirname, `../files/${directory}`)
 
-  console.log(chalk.bgCyan.yellowBright(`Directory Maker: ${mainDirPath}`))
+
+  console.log(chalk.bgCyan.whiteBright(`NEW DIRECTORY CREATED:
+${mainDirPath}
+`))
 
   if(fs.existsSync(mainDirPath)){
-    console.log(`Directory for ${mainDirPath} already exists`)
+    console.log(chalk.bgRed.white.bold(`Directory for ${mainDirPath} already exists; overwriting may occur.`))
     process.exit(0)
   }
   fs.mkdirSync(mainDirPath)
@@ -55,6 +59,5 @@ const directoryMaker = (directory)=>{
 
 }
 
-// directoryMaker('www.mrksquincy.com')
 
 module.exports = directoryMaker

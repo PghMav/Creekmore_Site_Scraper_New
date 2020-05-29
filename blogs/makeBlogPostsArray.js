@@ -9,7 +9,9 @@ const makeBlogPostsArray = async (host)=>{
     `${host}/blog-2018`,
     `${host}/blog-2017`,
     `${host}/blog-2016`,
-    `${host}/blog-2015`
+    `${host}/blog-2015`,
+    `${host}/blog-2014`,
+    `${host}/blog-2013`
   ]
   let archiveArray = []
 
@@ -25,7 +27,8 @@ const makeBlogPostsArray = async (host)=>{
 
   }
   }
-
+  console.log(chalk.bgCyan.whiteBright(`TOTAL BLOG POSTS ON SITE:
+${archiveArray.length}`))
   return archiveArray
 
 }

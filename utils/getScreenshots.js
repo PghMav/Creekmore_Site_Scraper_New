@@ -7,7 +7,7 @@ const filterUrls = require('./filterUrls.js')
 const ProgressBar = require('progress')
 
 
-const getScreenshots = async (urlArray, dir, blog) => {
+const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) => {
   let resourceCount = 0
 
   if(blog){
@@ -27,10 +27,6 @@ const getScreenshots = async (urlArray, dir, blog) => {
   }
 
 
-
-
-  //console.log(chalk.bgCyan.yellowBright(`SCREENSHOT: ${blog? "Blogs": "Pages"}`))
-
   const browser = await puppeteer.launch( )
 
   for(const url of urlArray){
@@ -48,19 +44,9 @@ const getScreenshots = async (urlArray, dir, blog) => {
     const pathnameLength = pathname.length<2
 
     const ifBlog = blog ? `/blog`:``
+    const ifOverwrite = overwrite ? `-SINGLE`:``
 
-    const writePath = path.join(__dirname, `../files/${dir}/screenshots/${ifBlog}${!pathnameLength ?  pathname : host}.png`)
-
-    // const screenshotOptions = {
-    //
-    //   path: writePath,
-    //   fullPage: true
-    //   // clip: {
-    //   //   x:0,
-    //   //   y:0,
-    //   //   height: 7000,
-    //   //   width: 1024
-    //   }
+    const writePath = path.join(__dirname, `../files/${dir}/screenshots/${ifBlog}${!pathnameLength ?  pathname : host}${ifOverwrite}.png`)
 
 
     const viewportOptions = {
@@ -86,18 +72,12 @@ const getScreenshots = async (urlArray, dir, blog) => {
 
       await page.close()
 
-      if (blog) {
-      snapBlogProgress.tick();
-      if(snapBlogProgress.complete){
-        console.log(chalk.bgCyan.yellowBright(`Blogs screenshots complete!`));
+
+      appProgressBar.tick()
+      if (appProgressBar.complete) {
+        console.log(chalk.bgGreen.whiteBright(`Site complete!`));
       }
 
-      } else {
-      snapPagesProgress.tick()
-      if (snapPagesProgress.complete) {
-        console.log(chalk.bgCyan.yellowBright(`Pages screenshots complete!`));
-      }
-      }
 
 
 
@@ -105,12 +85,9 @@ const getScreenshots = async (urlArray, dir, blog) => {
       resourceCount++
 
     } catch (e){
-      if(blog){
-        snapBlogProgress.interrupt(`Issue SCREENSHOT ${url}: ${e}`)
-      } else {
-        snapPagesProgress.interrupt(`Issue SCREENSHOT ${url}: ${e}`)
-      }
-    //  console.log(chalk.cyan(e))
+
+        appProgressBar.interrupt(`Issue SCREENSHOT ${url}`)
+
 
     }
 
@@ -120,15 +97,15 @@ const getScreenshots = async (urlArray, dir, blog) => {
 
 
  await browser.close()
- process.on('exit', ()=>{
-
-   console.log(chalk.bold.magenta(
-     `
-     **************************
-     Total: ${resourceCount} ${blog ? 'blogs':'pages'} captured via screenshot
-     **************************`))
-
-   });
+ // process.on('exit', ()=>{
+ //
+ //   console.log(chalk.bold.magenta(
+ //     `
+ //     **************************
+ //     Total: ${resourceCount} captured via screenshot
+ //     **************************`))
+ //
+ //   });
 
 }
 

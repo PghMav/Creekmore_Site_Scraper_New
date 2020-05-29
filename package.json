@@ -28,15 +28,10 @@
   },
   "scripts": {
     "test": "jest",
-    "scraper": "nodemon apps.js --ignore '/files/*'",
-    "html": "node utils/scrapeHtml.js",
-    "screenshotter": "node utils/screenshotter.js",
-    "blog": "node app.js --url=https://www.allaboutblindsetc.com --type=BLOG",
-    "pages-blogs": "node app.js --url=https://www.allaboutblindsetc.com --type=PAGES-BLOGS",
-    "basic": "node app.js --url=https://www.mrksquincy.com --type=PAGES",
-    "single": "node app.js --url=https://www.mrksquincy.com/about --type=SINGLE",
-    "pics": "node app.js --url=https://www.mrksquincy.com --type=SCREENSHOT",
-    "kahuna": "node app.js --url=https://www.mrksquincy.com --type=ALL"
+    "screenshots": "node app.js --url=https://www.allaboutblindsetc.com --type=SCREENSHOTS",
+    "html": "node app.js --url=https://www.allaboutblindsetc.com --type=HTML",
+    "all": "node app.js --url=https://www.mrksquincy.com --type=HTML-SCREENSHOTS",
+    "single": "node app.js --url=https://www.mrksquincy.com/about --type=SINGLE"
   },
   "keywords": [],
   "author": "Bret Mavrich",
