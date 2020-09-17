@@ -15,7 +15,7 @@ the url flag takes a simple .xml string. If it is not a string ending in .xml, i
 
 ### type
 
-The type flag takes one of three valid values: HTML, SCREENSHOT, BOTH. Types are case sensitive.
+The type flag takes one of three valid values: HTML, SCREENSHOT, ALL. Types are case sensitive.
 
 ## Example
 
