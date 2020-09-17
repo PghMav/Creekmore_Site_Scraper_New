@@ -31,7 +31,7 @@ const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) =>
   }
 
 
-  const browser = await puppeteer.launch( )
+  const browser = await puppeteer.launch({headless: false})
 
   for(const url of urlArray){
 
@@ -70,9 +70,15 @@ const getScreenshots = async (urlArray, dir, blog, overwrite, appProgressBar) =>
         height: 768
             })
       await page.goto(url)
-      if(test1 || test2){
-        await page.waitForSelector(`#pageMain_ContentSection_Section_20 > div.product-details-container.overview.ng-scope > div > div > div > div`)
-      }
+      
+      await page.waitForSelector(
+        "#cmp-modal-wrapper > div > div.cmp-modal__close > img"
+      );
+
+      await page.click("#cmp-modal-wrapper > div > div.cmp-modal__close > img");
+      // if(test1 || test2){
+      //   await page.waitForSelector(`#pageMain_ContentSection_Section_20 > div.product-details-container.overview.ng-scope > div > div > div > div`)
+      // }
       await page.screenshot({
         path: writePath,
         fullPage: true

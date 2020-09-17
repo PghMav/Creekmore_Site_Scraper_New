@@ -39,7 +39,13 @@ const fullSiteUtility =  (baseUrl, theType, host) =>{
    directoryMaker(host)
 
     getAllUrls()
-        .then(({sitemap_xml, sitemap_html, blogs})=>{
+        .then((data)=>{
+          const { sitemap_xml, sitemap_html, blogs } = data
+          console.log(`get all urls fires.
+           xml sitemap length: ${sitemap_xml.length}
+           html sitemap length: ${sitemap_html.length}`)
+          
+
           //compare arrays and make a master array
 
           const additionalUrls = []
@@ -78,7 +84,7 @@ ${pages.length} being scraped!
           //appProgressBar counts total pages twice if scraping and screencapturing; this way
           //the progress bar is showing the true total
 
-          const appProgress = new ProgressBar(chalk.bgYellow.whiteBright(`Working [:bar] :current/:total :percent :elapsed seconds`), {
+          const appProgress = new ProgressBar(chalk.bgCyan.whiteBright(`Working [:bar] :current/:total :percent :elapsed seconds`), {
             total: (blogs.length + pages.length)*(theType === 'HTML-SCREENSHOTS'? 2 : 1),
             width: 20
           })

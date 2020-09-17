@@ -10,7 +10,7 @@
     "cheerio": "^1.0.0-rc.3",
     "electron": "^8.1.1",
     "fs-copy-file": "^2.1.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "nightmare": "^3.0.2",
     "progress": "^2.0.3",
     "puppeteer": "^3.1.0",
@@ -27,11 +27,13 @@
     "jest": "^26.0.1"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "screenshots": "node app.js --url=https://www.allaboutblindsetc.com --type=SCREENSHOTS",
-    "html": "node app.js --url=https://www.mrksquincy.com --type=HTML",
+    "html": "node app.js --url=https://www.4ivan.com --type=HTML",
     "all": "node app.js --url=https://www.hdalliance.com --type=HTML-SCREENSHOTS",
-    "single": "node app.js --url=https://www.mrksquincy.com/about --type=SINGLE"
+    "single": "node app.js --url=https://www.4ivan.com/inspiration-solutions/shape/angled-window-blinds-and-shades --type=SINGLE",
+    "demo": "node app.js --url=https://www.mrksquincy.com --type=HTML",
+    "demo-all": "node app.js --url=https://www.4ivan.com --type=HTML-SCREENSHOTS"
   },
   "keywords": [],
   "author": "Bret Mavrich",

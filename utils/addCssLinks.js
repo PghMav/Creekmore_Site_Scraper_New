@@ -2,8 +2,9 @@ const fs = require('fs')
 const chalk = require('chalk')
 const cheerio = require('cheerio')
 
-const addCssLinks = (html, linkString) =>{
-
+const addCssLinks = (theHtml, linkString) =>{
+  const html = theHtml.toString()
+  //console.log(chalk.cyan(html))
   const stringHead = '</head>'
 
   const findHeadEnd = html.lastIndexOf(stringHead)

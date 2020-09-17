@@ -17,7 +17,7 @@ const getAllUrlsFromHtml = async (baseUrl, sitemap,  callback)=>{
   const page = await browser.newPage()
   await page.setDefaultTimeout(60000)
   await page.goto(sitemap)
-  await page.waitForSelector('a[href="/hunter-douglas-window-treatments/designer-roller"]')
+  await page.waitForSelector('a[href="/hunter-douglas/roller-shades-solar-shades/designer-roller"]')
 
   await page.content()
       .then(html =>{
